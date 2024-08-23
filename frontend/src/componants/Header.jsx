@@ -3,10 +3,13 @@ import { NavLink } from "react-router-dom";
 const Header = () => {
   return (
     <header>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark">
+      <nav
+        style={{ height: "60px" }}
+        className="navbar navbar-expand-lg navbar-light bg-dark fixed-top"
+      >
         <div className="container-fluid">
           <NavLink to="/" className="navbar-brand text-light">
-            Zeper
+            NEXUS
           </NavLink>
           <button
             className="navbar-toggler"

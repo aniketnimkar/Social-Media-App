@@ -5,12 +5,9 @@ import PostCard from "./PostCard";
 const MiddleView = () => {
   return (
     <>
-      <section>
-        <p>Middle view</p>
+      <section style={{ marginTop: "100px" }}>
         <CreatePost />
-        <br />
-        <br />
-        <br />
+
         <PostCard />
       </section>
     </>
