@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("Express server");
 });
 
-// for posting Data
+// for posting Data.
 app.post("/profileUser", async (req, res) => {
   try {
     const createUser = new ProfileUser(req.body);
