@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useSelector, useDispatch } from "react-redux";
-import { likeCount, likedPost, bookmarkPost } from "../features/posts";
+import {
+  likeCount,
+  likedPost,
+  bookmarkPost,
+  deletePost,
+} from "../features/posts";
 import EditPost from "../componants/EditPost";
 
 const PostCard = () => {
@@ -15,6 +20,10 @@ const PostCard = () => {
   const likeHandler = (post) => {
     dispatch(likeCount(post));
     dispatch(likedPost(post));
+  };
+
+  const deletePostHandler = (post) => {
+    dispatch(deletePost({ postId: post.postId }));
   };
 
   const bookmarkHandler = (post) => {
@@ -53,6 +62,7 @@ const PostCard = () => {
           Edit
         </span>
         <span
+          onClick={() => deletePostHandler(post)}
           className="popover-item pt-2"
           style={{ cursor: "pointer", display: "block", color: "white" }}
         >
@@ -109,12 +119,12 @@ const PostCard = () => {
               <div onClick={() => likeHandler(post)}>
                 <i
                   className={
-                    post.like.liked
+                    post.like?.liked
                       ? "bi bi-heart-fill me-1"
                       : "bi bi-heart me-1"
                   }
                 ></i>{" "}
-                <span>{post.like.counter}</span>
+                <span>{post.like?.counter}</span>
               </div>
               <div onClick={() => bookmarkHandler(post)}>
                 <i

@@ -46,7 +46,7 @@ export const postSlice = createSlice({
       );
 
       if (foundPost) {
-        if (foundPost.like.liked) {
+        if (foundPost.like?.liked) {
           // Add the post to likedPosts if it's liked
           if (
             !state.likedPosts.some((post) => post.postId === foundPost.postId)
@@ -102,6 +102,13 @@ export const postSlice = createSlice({
         foundPost.userContent.image = image; // Update the image
       }
     },
+    deletePost: (state, action) => {
+      // console.log("Current state:", JSON.stringify(state, null, 2));
+      // console.log("Action payload:", action.payload);
+      state.posts = state.posts.filter(
+        (post) => post.postId !== action.payload.postId
+      );
+    },
   },
 });
 
@@ -112,6 +119,7 @@ export const {
   likedPost,
   bookmarkPost,
   commitPostChanges,
+  deletePost,
 } = postSlice.actions;
 
 export default postSlice.reducer;

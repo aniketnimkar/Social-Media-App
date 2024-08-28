@@ -14,7 +14,7 @@ const EditPost = ({ postId }) => {
   const [postText, setPostText] = useState(post?.userContent?.text || "");
   const [localImage, setLocalImage] = useState(post?.userContent?.image || "");
 
-  console.log(post);
+  // console.log(post);
 
   // Update postText and localImage when post prop changes
   useEffect(() => {
