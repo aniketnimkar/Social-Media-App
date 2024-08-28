@@ -11,14 +11,14 @@ const initialState = {
         text: "Hi there!",
         image: "https://placehold.co/600x400",
       },
-      like: {
-        liked: true,
-        counter: 7,
-      },
-      comment: [],
+      like: { liked: true, counter: 7 },
+      bookMarked: true,
+
+      comment: 4,
     },
   ],
   likedPosts: [],
+  bookmarkPosts: [],
 };
 
 export const postSlice = createSlice({
@@ -29,42 +29,89 @@ export const postSlice = createSlice({
       state.posts = [action.payload, ...state.posts];
     },
     likeCount: (state, action) => {
-      // console.log(action.payload.postId);
       const foundPost = state.posts.find(
         (post) => post.postId === action.payload.postId
       );
-      // console.log(JSON.stringify(foundpost));
+
       if (foundPost) {
-        if (foundPost.like.liked) {
-          foundPost.like.counter -= 1; // Unlike the post
-        } else {
-          foundPost.like.counter += 1;
-          // Like the post
-          state.likedPosts = [...state.likedPosts, action.payload];
-        }
         foundPost.like.liked = !foundPost.like.liked; // Toggle the liked state
+        foundPost.like.liked
+          ? foundPost.like.counter++
+          : foundPost.like.counter--; // Adjust the counter
       }
     },
     likedPost: (state, action) => {
-      const isLiked = action.payload.like.liked;
-      const postId = action.payload.postId;
+      const foundPost = state.posts.find(
+        (post) => post.postId === action.payload.postId
+      );
 
-      if (isLiked) {
-        // Add the post to likedPosts if it's liked
-        if (!state.likedPosts.some((post) => post.postId === postId)) {
-          state.likedPosts.push(action.payload);
+      if (foundPost) {
+        if (foundPost.like.liked) {
+          // Add the post to likedPosts if it's liked
+          if (
+            !state.likedPosts.some((post) => post.postId === foundPost.postId)
+          ) {
+            state.likedPosts.push(foundPost);
+          }
+        } else {
+          // Remove the post from likedPosts if it's unliked
+          state.likedPosts = state.likedPosts.filter(
+            (post) => post.postId !== foundPost.postId
+          );
         }
-      } else {
-        // Remove the post from likedPosts if it's unliked
-        state.likedPosts = state.likedPosts.filter(
-          (post) => post.postId !== postId
-        );
+      }
+    },
+    bookmarkPost: (state, action) => {
+      // Find the post in the posts array using the postId from the action payload
+      const foundPost = state.posts.find(
+        (post) => post.postId === action.payload.postId
+      );
+
+      // If the post is found
+      if (foundPost) {
+        // Toggle the bookmarked status of the post
+        foundPost.bookMarked = !foundPost.bookMarked;
+
+        if (foundPost.bookMarked) {
+          // If the post is now bookmarked, add it to the bookmarkPosts array
+          state.bookmarkPosts.push(foundPost);
+        } else {
+          // If the post is no longer bookmarked, remove it from the bookmarkPosts array
+          state.bookmarkPosts = state.bookmarkPosts.filter(
+            (post) => post.postId !== action.payload.postId
+          );
+        }
+      }
+    },
+    // Action to temporarily remove media in the modal
+    // editPostRemoveMedia: (state, action) => {
+    //   const foundPost = state.posts.find(
+    //     (post) => post.postId === action.payload.postId
+    //   );
+    //   console.log(JSON.stringify(foundPost));
+    //   if (foundPost) {
+    //     foundPost.userContent.image = ""; // Use a temporary image property
+    //   }
+    // },
+    // Action to commit changes to the post
+    commitPostChanges: (state, action) => {
+      const { postId, text, image } = action.payload;
+      const foundPost = state.posts.find((post) => post.postId === postId);
+      if (foundPost) {
+        foundPost.userContent.text = text; // Update the text
+        foundPost.userContent.image = image; // Update the image
       }
     },
   },
 });
 
 // Action generators
-export const { createPost, likeCount, likedPost } = postSlice.actions;
+export const {
+  createPost,
+  likeCount,
+  likedPost,
+  bookmarkPost,
+  commitPostChanges,
+} = postSlice.actions;
 
 export default postSlice.reducer;
